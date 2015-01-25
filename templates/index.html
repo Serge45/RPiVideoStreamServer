@@ -1,0 +1,42 @@
+<html>
+<body>
+<div>
+<img src="{{ url_for('video_feed') }}"></img>
+</div>
+<form action="" method="POST" id="servo_form">
+<input id="slider" name="slider" type="range" min="500" max="2500" value={{slider_value}} step="50" onchange="showValue(this.value)" >
+<div>
+Pulse width: 
+<span id="range">
+    {{slider_value}}
+</span>
+</div>
+<div id="range_deg">
+    <div id="range_deg_label">
+    Degree: <span id="range_deg_value">{{servo_deg}}</span>
+    </div>
+</div>
+<input type="submit" id="send"  name="send" value="Send">
+</form>
+
+<script type="text/javascript" src="{{url_for('static', filename='jquery-1.11.2.min.js')}}">
+</script>
+
+<script type="text/javascript">
+
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+function showValue(newValue)
+{
+    document.getElementById("range").innerHTML=newValue;
+    //document.getElementById("servo_form").submit()
+    $.getJSON($SCRIPT_ROOT + '/_move_servo', {
+        pulsewidth : $('input[name="slider"]').val()
+    }, function(data) {
+        $("#range_deg_value").text(data.result);
+    });
+}
+</script>
+
+</body>
+</html>
