@@ -1,33 +1,47 @@
-<html>
+<html !DOCTYPE=html>
 <body>
-<div>
-<img src="{{ url_for('video_feed') }}"></img>
+<head>
+    <link href="{{ url_for('static', filename='styles.css') }}"
+          type="text/css"
+          rel="stylesheet"
+    >
+</head>
+<div class="center nav-bar"> Streaming </div>
+
+<div id="image_control" class="left">
+    <img id="video_stream" src="{{ url_for('video_feed') }}"></img>
 </div>
-<form action="" method="POST" id="servo_form">
-<input id="slider" name="slider" type="range" min="500" max="2500" value={{slider_value}} step="50" onchange="showValue(this.value)" >
-<div>
-Pulse width: 
-<span id="range">
-    {{slider_value}}
-</span>
+
+<div id="servo_control" class="right">
+    <form action="" method="POST" id="servo_form">
+        <input id="slider" name="slider" type="range" min="500" max="2500" value={{slider_value}} step="50" onchange="showValue(this.value)" >
+        <div>
+        Pulse width: 
+            <span id="range">
+                {{slider_value}}
+            </span>
+        </div>
+
+        <div id="range_deg">
+            <div id="range_deg_label">
+            Degree: <span id="range_deg_value">{{ servo_deg }}</span>
+            </div>
+        </div>
+        <input type="submit" class="button submit_button center" id="send" name="send" value="Send">
+    </form>
 </div>
-<div id="range_deg">
-    <div id="range_deg_label">
-    Degree: <span id="range_deg_value">{{servo_deg}}</span>
-    </div>
-</div>
-<input type="submit" id="send"  name="send" value="Send">
-</form>
 
 <script type="text/javascript" src="{{url_for('static', filename='jquery-1.11.2.min.js')}}">
+</script>
+
+<script type="text/javascript" src="{{url_for('static', filename='caman.full.min.js')}}">
 </script>
 
 <script type="text/javascript">
 
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
-function showValue(newValue)
-{
+function showValue(newValue) {
     document.getElementById("range").innerHTML=newValue;
     //document.getElementById("servo_form").submit()
     $.getJSON($SCRIPT_ROOT + '/_move_servo', {
@@ -36,6 +50,7 @@ function showValue(newValue)
         $("#range_deg_value").text(data.result);
     });
 }
+
 </script>
 
 </body>
