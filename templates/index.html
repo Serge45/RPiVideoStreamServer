@@ -12,6 +12,10 @@
     <img id="video_stream" src="{{ url_for('video_feed') }}"></img>
 </div>
 
+<div id="pi_image_control" class="left">
+    <img id="pi_video_stream" src="{{ url_for('pi_video_feed') }}"></img>
+</div>
+
 <div id="servo_control" class="right">
     <form action="" method="POST" id="servo_form">
         <input id="slider" name="slider" type="range" min="500" max="2500" value={{slider_value}} step="50" onchange="showValue(this.value)" >

@@ -28,7 +28,7 @@ def install_secret_key(app, filename='secret_key'):
 def index():
     return render_template("index.html", 
                            slider_value=1500,
-                           servo_deg=180)
+                           servo_deg=90)
 
 @app.route("/", methods=['POST'])
 def move_servo():
@@ -59,9 +59,21 @@ def get_camera_frame():
         yield (b'--frame\r\n' +
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
+def get_pi_camera_frame():
+    while True:
+        frame = servo_camera.pi_cam_capture()
+        yield (b'--frame\r\n' +
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
 @app.route("/video_feed")
 def video_feed():
     return Response(get_camera_frame(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route("/pi_video_feed")
+def pi_video_feed():
+    return Response(get_pi_camera_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
